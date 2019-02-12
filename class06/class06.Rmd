@@ -264,7 +264,7 @@ plotb3(s2.b, sse = s2.chainA, typ = "l", ylab = "Bfactor")
 plotb3(s3.b, sse = s3.chainA, typ = "l", ylab = "Bfactor")
 
 #Simplify to work with some generic vectors
-s <- read.pdb("input kinase")
+#s <- read.pdb("input kinase")
 chain <- trim.pdb(s, chain ="A", elety ="CA")
 s.b <- c(s1.chainA$atom$b, s2.chainA$atom$b, s3.chainA$atom$b)
 plots <- c(plotb3(s1.b, sse = s1.chainA, typ = "l", ylab = "Bfactor"), plotb3(s2.b, sse = s2.chainA, typ = "l", ylab = "Bfactor"), plotb3(s3.b, sse = s3.chainA, typ = "l", ylab = "Bfactor"))
