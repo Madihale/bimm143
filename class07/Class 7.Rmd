@@ -2,7 +2,7 @@
 title: "Class 7 functions and packages"
 author: "Madison Hale"
 date: "1/29/2019"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
