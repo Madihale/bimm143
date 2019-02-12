@@ -1,0 +1,118 @@
+---
+title: "Class 7 functions and packages"
+author: "Madison Hale"
+date: "1/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Functions revisted
+
+```{r}
+#importing example functions from slides
+source("http://tinyurl.com/rescale-R")
+```
+ trying **rescale()** function out
+ 
+```{r}
+rescale( c(1,5,10) )
+```
+
+Trying **rescale2()** with the **stop()** function catch for a non-numeric input
+
+```{r}
+#rescale2( c(1:5, "word"))
+```
+
+#performed a google search on how to find NA values in R code
+
+```{r}
+x <-  c(3,7, NA,4,8)
+which(is.na(x))
+
+```
+
+ 
+```{r}
+#lets define an example x and y
+
+x <- c( 1, 2, NA, 3, NA)
+y <- c( NA, 3, NA, 3, 4)
+y2 <- c(1, NA, NA, NA)
+```
+
+```{r}
+is.na(x)
+sum(is.na(x))
+```
+
+```{r}
+
+is.na(x)
+is.na(y)
+is.na(x) & is.na(y)
+
+#putting together
+sum( is.na(x) & is.na(y))
+```
+
+Take my working snippet and make our first function...
+
+```{r}
+
+both.na <- function(x,y) {
+  sum( is.na(x) & is.na(y))
+}
+
+both_na(x,y)
+
+```
+
+```{r}
+
+x <- c(NA, NA, NA)
+y1 <- c( 1, NA, NA)
+y2 <- c( 1, NA, NA, NA)
+y3 <- c( 1, NA, NA, NA, NA)
+both_na(x, y2)
+both_na(x, y3)
+
+```
+
+Trying out new, improved both_na2 function
+```{r}
+
+# both_na2(x, y2)
+# both_na2(x, y3)
+# 
+# both_na3(x, y1)
+```
+
+And trying both_na3 function
+```{r}
+both_na3(x, y1)
+```
+
+BLOGDOWN
+blogdown::new_site("tmp")
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
