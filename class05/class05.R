@@ -2,7 +2,7 @@
 #' title: "Class 5: R Graphics Intro"
 #' author: "Madison Hale"
 #' date: "January 22, 2019"
-#' output: pdf_document
+#' output: github_document
 #' ---
 
 # Class 05 R graphics intro
