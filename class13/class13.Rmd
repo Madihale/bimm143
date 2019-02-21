@@ -1,0 +1,79 @@
+---
+title: "Class 13: Structure Based Drug Discovery"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Prepare HIV-protease molecule for docking
+
+First get a PDB structure from the online database then clean it up for docking
+
+```{r}
+library(bio3d)
+```
+
+get protein structure from the database
+```{r}
+file.name <- get.pdb("1hsg")
+```
+
+```{r}
+file.name
+```
+
+Read file into R and clean it up (remove non-protein bits) and save ligand into a separate file
+
+```{r}
+hiv <- read.pdb(file.name)
+hiv
+```
+
+Q1: What is the name of the two non protein resid values in this structure? What does resid
+correspond to and how would you get a listing of all reside values in this structure? 
+  -> HOH & MK1
+  
+```{r}
+prot <- trim.pdb(hiv, "protein") #no water
+prot
+```
+
+```{r}
+write.pdb(prot, file = "1hsg_protein.pdb")
+```
+
+
+```{r}
+lig <- trim.pdb(hiv, "ligand") #ligand is MK1
+lig
+```
+
+```{r}
+write.pdb(lig, file = "1hsg_ligand.pdb")
+```
+
+##Inspecting docking results
+```{r}
+res <- read.pdb("all.pdbqt", multi = TRUE)
+write.pdb(res, "results.pdb")
+res
+```
+
+## Normal Mode Analysis
+
+```{r}
+pdb <- read.pdb("1HEL")
+
+m <- nma(pdb)
+plot(m)
+```
+
+```{r}
+mktrj(m, mode = 7, file = "nma_7.pdb")
+```
+
+Can now run this on VMD, and play to show predicted flexibility of the molecule!
+
+
