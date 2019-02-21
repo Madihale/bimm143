@@ -1,0 +1,120 @@
+---
+title: "Class 11: Structural Bioinformatics 1"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Section 1- The PDB
+
+```{r}
+stats <- read.csv("class11 pdb data csv.csv", row.names = 1)
+stats
+```
+
+Q1:  Determine the percentage of structures solved by X-Ray and Electron Microscopy. From
+the website what proportion of structures are protein?
+
+```{r}
+percent.by.method <- stats$Total / sum(stats$Total) * 100
+names(percent.by.method) <- rownames(stats)
+percent.by.method
+```
+
+```{r}
+sum(stats$Proteins) / sum(stats$Total) * 100
+```
+
+Type HIV in the PDB website search box on the home page and determine how many
+HIV-1 protease structures are in the current PDB?
+  -> 1138
+  
+  
+## load the Bio3D package (previously installed...don't need to install again)
+
+```{r}
+library(bio3d)  
+```
+
+More about the functions within the package:
+```{r}
+help(package = bio3d)
+example(plot.bio3d)
+```
+
+Reading pdb files:
+
+```{r}
+pdb <- read.pdb("1hsg")
+## Note: Accessing on-line PDB file
+pdb
+```
+```{r}
+pdb$atom
+```
+```{r}
+pdb$atom$resid
+```
+
+```{r}
+aa321(pdb$atom$resid)
+```
+
+Goint to use:
+  pdb <- read.pdb("1hsg")
+  prot.inds <- atom.select(pdb, ?)
+  lig.inds <-
+
+```{r}
+?atom.select
+```
+
+Want to select out the protein and drug only parts of these molecular files.
+
+```{r}
+pdb <- read.pdb("1hsg")
+prot.inds <- atom.select(pdb, "protein")
+```
+
+```{r}
+pdb$atom[prot.inds$atom,]
+```
+
+```{r}
+prot.pdb <- trim.pdb(pdb, prot.inds)
+write.pdb(prot.pdb, file = "protein.pdb")
+```
+
+Let's do the same thing for our drug...
+
+```{r}
+lig.inds <- atom.select(pdb, "ligand")
+lig.pdb <- trim.pdb(pdb, lig.inds)
+write.pdb(lig.pdb, file = "ligand.pdb")
+```
+
+```{r}
+library(bio3d.view)
+view(pdb, "overview")
+```
+
+## Bio3D view() installed...for the 3D viewer in your R markdown (the development version of bio3d.view)
+
+in r console:
+> install.packages("devtools")
+> devtools::install_bitbucket("Grantlab/bio3d-view")
+
+To use in your R session:
+
+```{r}
+library("bio3d.view")
+pdb <- read.pdb("5p21")
+view(pdb)
+view(pdb, "overview", col = "sse")
+```
+
+
+
+
