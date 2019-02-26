@@ -194,26 +194,24 @@ summary(res)
 
 '''
 ```{r}
-res$sig <- res$padj<0.05
+res01 <- results(dds, alpha=0.01)
+summary(res01)
 ```
 
 ```{r}
-#mycols <- rep("gray", nrow(res01))
-#mycols[ abs(res01$log2FoldChange) > 2 ] <- "red"
+#Setup  your point color vector 
+mycols <- rep("gray", nrow(res01))
+mycols[ abs(res01$log2FoldChange) > 2 ]  <- "red" 
 
-#inds <- (res01$padj < 0.01) & (asbs(res01$log2FoldChange) > 2)
-#mycols[inds] <- "blue"
-#plot(res01$log2FoldChange, -log(res01$padj), col = mycols, ylab = "-Log(P-value", xlab = "Log2(FoldChange)")
-#abline(v = c(-2,2), col = "gray", lty = 2)
-#abline(h = -log(0.1), col = "gray", lty = 2)
-```
+inds <- (res01$padj < 0.01) & (abs(res01$log2FoldChange) > 2 )
+mycols[ inds ] <- "blue"
 
-```{r}
-library(ggplot2)
+#Volcano plot  with custom colors 
+plot( res01$log2FoldChange,  -log(res01$padj), 
+ col=mycols, ylab="-Log(P-value)", xlab="Log2(FoldChange)" )
 
-ggplot(as.data.frame(res), aes(log2FoldChange, -1*log10(pvalue), col = sig)) + 
-    geom_point() + 
-    ggtitle("Volcano plot")
+abline(v=c(-2,2), col="gray", lty=2)
+abline(h=-log(0.1), col="gray", lty=2)
 ```
 
 
