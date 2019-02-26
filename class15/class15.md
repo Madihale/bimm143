@@ -525,28 +525,35 @@ summary(res)
 '''
 
 ``` r
-res$sig <- res$padj<0.05
+res01 <- results(dds, alpha=0.01)
+summary(res01)
 ```
+
+    ## 
+    ## out of 25258 with nonzero total read count
+    ## adjusted p-value < 0.01
+    ## LFC > 0 (up)       : 850, 3.4%
+    ## LFC < 0 (down)     : 581, 2.3%
+    ## outliers [1]       : 142, 0.56%
+    ## low counts [2]     : 9033, 36%
+    ## (mean count < 6)
+    ## [1] see 'cooksCutoff' argument of ?results
+    ## [2] see 'independentFiltering' argument of ?results
 
 ``` r
-#mycols <- rep("gray", nrow(res01))
-#mycols[ abs(res01$log2FoldChange) > 2 ] <- "red"
+#Setup  your point color vector 
+mycols <- rep("gray", nrow(res01))
+mycols[ abs(res01$log2FoldChange) > 2 ]  <- "red" 
 
-#inds <- (res01$padj < 0.01) & (asbs(res01$log2FoldChange) > 2)
-#mycols[inds] <- "blue"
-#plot(res01$log2FoldChange, -log(res01$padj), col = mycols, ylab = "-Log(P-value", xlab = "Log2(FoldChange)")
-#abline(v = c(-2,2), col = "gray", lty = 2)
-#abline(h = -log(0.1), col = "gray", lty = 2)
+inds <- (res01$padj < 0.01) & (abs(res01$log2FoldChange) > 2 )
+mycols[ inds ] <- "blue"
+
+#Volcano plot  with custom colors 
+plot( res01$log2FoldChange,  -log(res01$padj), 
+ col=mycols, ylab="-Log(P-value)", xlab="Log2(FoldChange)" )
+
+abline(v=c(-2,2), col="gray", lty=2)
+abline(h=-log(0.1), col="gray", lty=2)
 ```
 
-``` r
-library(ggplot2)
-
-ggplot(as.data.frame(res), aes(log2FoldChange, -1*log10(pvalue), col = sig)) + 
-    geom_point() + 
-    ggtitle("Volcano plot")
-```
-
-    ## Warning: Removed 13578 rows containing missing values (geom_point).
-
-![](class15_files/figure-markdown_github/unnamed-chunk-31-1.png)
+![](class15_files/figure-markdown_github/unnamed-chunk-30-1.png)
