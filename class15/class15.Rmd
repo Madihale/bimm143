@@ -1,0 +1,234 @@
+---
+title: "Class 15: Transcriptonomics and analysis of RNA-Seq data"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import countData and colData into R
+
+```{r}
+counts <- read.csv("data/airway_scaledcounts.csv", stringsAsFactors = FALSE)
+metadata <-  read.csv("data/airway_metadata.csv", stringsAsFactors = FALSE)
+```
+
+look at data
+
+```{r}
+dim(counts)
+head(counts) #shows first six rows
+```
+
+```{r}
+dim(metadata)
+head(metadata)
+```
+
+make sure column names count data is the first column of metadata
+```{r}
+colnames(counts)
+```
+
+```{r}
+metadata$id
+```
+
+check for corespondence of metadata and countdata
+```{r}
+ #everything but first one 
+#all() function makes sure ALL are true. if one is false, will return FALSE
+all( colnames(counts)[-1] == metadata$id )
+```
+ **side note: View() function in Console allows data to be viewed in new tab**
+ 
+First task- find which columns in **counts** correspond to the control conditions (no drug)
+Then calculate the mean value for each gene.
+
+```{r}
+control.inds <- metadata$dex == "control"
+control.inds <- metadata$id[control.inds]
+
+head( counts[,control.inds] )
+```
+
+Calculate the mean counts value for all genes
+```{r}
+#rowSums(counts[,control.inds]) / 4 ...not a good way in case you get more columns (perform more experiments)...four is hard coded into the code
+
+control.mean <- rowSums(counts[,control.inds]) / ncol(counts[,control.inds])
+names(control.mean) <- counts$ensgene
+head(control.mean)
+```
+
+Now do the same thing for the drug treated samples (*treated* columns)
+
+```{r}
+
+treated.inds <- metadata$dex == "treated"
+treated.inds <- metadata$id[treated.inds]
+
+head( counts[,treated.inds] )
+```
+
+```{r}
+treated.mean <- rowSums(counts[,treated.inds]) / ncol(counts[,treated.inds])
+names(treated.mean) <- counts$ensgene
+head(treated.mean)
+```
+
+Combine the meancount data for control and treated into a new data.frame called meancounts
+```{r}
+meancounts <- data.frame(control.mean, treated.mean)
+
+```
+
+```{r}
+colSums(meancounts)
+```
+
+```{r}
+plot(meancounts$control.mean, meancounts$treated.mean)
+```
+
+Put this on a log log plot to help see the data!
+```{r}
+plot(meancounts$control.mean, meancounts$treated.mean, log = "xy")
+```
+
+```{r}
+meancounts$log2fc <- log2(meancounts[,"treated.mean"]/meancounts[,"control.mean"])
+head(meancounts)
+```
+
+note: the NaN (“not a number””) and -Inf (negative infinity) results
+NaN is returned when you divide by zero and try to take the log 
+-Inf is returned when you try to take log of zero. It turns out that there are a lot of genes with zero expression...filter data to remove these genes.
+
+
+```{r}
+#practice vector
+toy <- c(1,2,0,4,0)
+toy == 0
+which(toy == 0)
+```
+
+```{r}
+toy <- meancounts[1:6,]
+
+unique( which(toy[,1:2] == 0, arr.ind = TRUE)[,1] )
+```
+
+Remove the zero entry genes from meancounts to produce **mycounts**
+```{r}
+zero.vals <- which(meancounts[,1:2] == 0, arr.ind = TRUE)
+
+to.rm <- unique(zero.vals[,1])
+mycounts <- meancounts[-to.rm,]
+head(mycounts)
+```
+
+```{r}
+up.ind <- mycounts$log2fc > 2
+down.ind <- mycounts$log2fc < (-2)
+```
+```{r}
+sum(up.ind)
+sum(down.ind)
+```
+note: back ticks (``) run code as R code when document is knitted!
+
+There are `sum(up.ind)` up regulated genes and `sum(down.ind)` down regulated genes.
+
+```{r}
+head(mycounts[up.ind,])
+```
+
+need to put data back into "human speak"...biology terms
+
+##Adding Annotation Data
+
+Use the **merge()** function to add annotation data from ensemble
+
+```{r}
+anno <- read.csv("data/annotables_grch38.csv")
+head(anno)
+```
+
+```{r}
+mycounts.annotated <- merge(x = mycounts, y = anno, by.x = "row.names", by.y = "ensgene")
+head(mycounts.annotated)
+#now we know what the genes are!
+```
+
+## DESeq2 analysis
+
+Now we do this analysis properly with p-values!
+
+```{r}
+library(DESeq2)
+citation("DESeq2")
+```
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = counts, 
+                              colData = metadata, 
+                              design = ~dex, 
+                              tidy = TRUE)
+dds
+```
+
+```{r}
+dds <- DESeq(dds)
+```
+
+get the results
+```{r}
+res <- results(dds)
+head(res)
+```
+
+```{r}
+summary(res)
+```
+
+'''
+```{r}
+res$sig <- res$padj<0.05
+```
+
+```{r}
+#mycols <- rep("gray", nrow(res01))
+#mycols[ abs(res01$log2FoldChange) > 2 ] <- "red"
+
+#inds <- (res01$padj < 0.01) & (asbs(res01$log2FoldChange) > 2)
+#mycols[inds] <- "blue"
+#plot(res01$log2FoldChange, -log(res01$padj), col = mycols, ylab = "-Log(P-value", xlab = "Log2(FoldChange)")
+#abline(v = c(-2,2), col = "gray", lty = 2)
+#abline(h = -log(0.1), col = "gray", lty = 2)
+```
+
+```{r}
+library(ggplot2)
+
+ggplot(as.data.frame(res), aes(log2FoldChange, -1*log10(pvalue), col = sig)) + 
+    geom_point() + 
+    ggtitle("Volcano plot")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
