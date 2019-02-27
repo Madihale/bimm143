@@ -199,7 +199,7 @@ summary(res01)
 ```
 
 ```{r}
-#Setup  your point color vector 
+#point color vector 
 mycols <- rep("gray", nrow(res01))
 mycols[ abs(res01$log2FoldChange) > 2 ]  <- "red" 
 
@@ -208,10 +208,10 @@ mycols[ inds ] <- "blue"
 
 #Volcano plot  with custom colors 
 plot( res01$log2FoldChange,  -log(res01$padj), 
- col=mycols, ylab="-Log(P-value)", xlab="Log2(FoldChange)" )
+ col = mycols, ylab = "-Log(P-value)", xlab = "Log2(FoldChange)" )
 
-abline(v=c(-2,2), col="gray", lty=2)
-abline(h=-log(0.1), col="gray", lty=2)
+abline(v = c(-2,2), col = "gray", lty = 2)
+abline(h = -log(0.1), col = "gray", lty = 2)
 ```
 
 
