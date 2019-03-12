@@ -5,4 +5,5 @@ This is a store of my class-work for [BIMM143 Winter 2019](https://bioboot.githu
 ## Contents  
 
 -Class 05 [Class 5](https://github.com/Madihale/bimm143/blob/master/class05/class05.md)
--Class 06 [Class 6](
+
+-Class 06 [Class 6](https://github.com/Madihale/bimm143/blob/master/class06/class06.md)
