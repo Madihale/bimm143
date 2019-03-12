@@ -16,9 +16,11 @@ This is a store of my class-work for [BIMM143 Winter 2019](https://bioboot.githu
 
 - Class11 [Class 11](https://github.com/Madihale/bimm143/blob/master/class11/class11.md)
 
-- Class12 [Class 13](https://github.com/Madihale/bimm143/blob/master/class13/class13.md)
+- Class13 [Class 13](https://github.com/Madihale/bimm143/blob/master/class13/class13.md)
+
+- Class14 [Class 14](https://github.com/Madihale/bimm143/blob/master/class14/class14.md)
 
 - Class15 [Class 15](https://github.com/Madihale/bimm143/blob/master/class15/class15.md)
 
-- Class11 [Class 16](https://github.com/Madihale/bimm143/blob/master/class16/class16.md)
+- Class16 [Class 16](https://github.com/Madihale/bimm143/blob/master/class16/class16.md)
 
