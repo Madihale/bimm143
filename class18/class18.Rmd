@@ -1,0 +1,131 @@
+---
+title: "Class 18"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The NCI GenomicDataCommons R Package
+
+first, packages were instilled in console
+
+once installed they are loaded
+```{r}
+library(GenomicDataCommons)
+library(TCGAbiolinks)
+library(maftools)
+```
+
+```{r}
+GenomicDataCommons::status()
+
+```
+
+### Querying the GDC from R
+
+```{r}
+cases_by_project <- cases() %>%
+  facet("project.project_id") %>%
+  aggregations()
+head(cases_by_project)
+```
+
+
+Make a plot of this data and color accordingly
+```{r}
+x <- cases_by_project$project.project_id
+
+#head(x)
+barplot(x$doc_count, names.arg = x$key, las = 2, log = "y")
+
+
+
+# Make a custom color vector for our plot
+colvec <- rep("lightblue", nrow(x))
+#colvec[,2] <- "red"
+
+# Plot with 'log' for y axis and rotate labels with 'las'
+#par(___)  
+#barplot(___, names.arg=___, log="y", col=colvec, las=2)
+```
+
+```{r}
+query <- GDCquery(project = "TCGA-PAAD",
+                  data.category = "Transcriptome Profiling",
+                  data.type = "Gene Expression Quantification")
+
+ans <- getResults(query)
+```
+
+```{r}
+maf.file <- GDCquery_Maf(tumor = "PAAD", pipelines = "mutect")
+vars = read.maf(maf = maf.file, verbose = FALSE)
+plotmafSummary(vars)
+```
+
+```{r}
+lollipopPlot(vars, gene = 'KRAS')
+```
+
+## Designing a Personalized Cancer Vaccine
+
+Section 1. Protein sequences from healthy and tumor tissue
+
+```{r}
+library(bio3d)
+seqs <- read.fasta("lecture18_sequences.fa")
+seqs
+```
+
+```{r}
+#not necessary step because sequences are already aligned
+#seqs <- seqaln(seqs)
+```
+
+```{r}
+## Calculate positional identity scores
+ide <- conserv(seqs$ali, method="identity")
+mutant.sites <- which(ide < 1) 
+
+## Exclude gap possitions from analysis
+gaps <- gap.inspect(seqs)
+mutant.sites <- mutant.sites[mutant.sites %in% gaps$f.inds]
+
+mutant.sites
+```
+
+```{r}
+## Make a "names" label for our output sequences (one per mutant)
+mutant.names <- paste0(seqs$ali["P53_wt",mutant.sites],
+                       mutant.sites,
+                       seqs$ali["P53_mutant",mutant.sites])
+
+mutant.names
+```
+
+```{r}
+## Sequence positions surounding each mutant site
+start.position <- mutant.sites - 8
+end.position <-  mutant.sites + 8
+
+# Blank matrix to store sub-sequences
+store.seqs <- matrix("-", nrow=length(mutant.sites), ncol=17)
+rownames(store.seqs) <- mutant.names
+
+## Extract each sub-sequence
+for(i in 1:length(mutant.sites)) {
+  store.seqs[i,] <- seqs$ali["P53_mutant",start.position[i]:end.position[i]]
+}
+
+store.seqs
+```
+
+```{r}
+write.fasta(seqs=store.seqs, ids=mutant.names, file="subsequences.fa")
+```
+
+Reminder: go to webpage, delete lase / and type ".Rmd" instead...
+
+Peters Lab (la jolla institute for immunology)

@@ -1,0 +1,88 @@
+---
+title: "Find a Gene"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Using bio 3d to analyze novel protein
+
+```{r}
+library(bio3d)
+```
+
+```{r}
+alignment <- read.fasta("aln-fasta.txt")
+head(alignment)
+```
+
+calculate a sequence identity matrix 
+
+```{r}
+matrix <- seqidentity(alignment)
+matrix
+```
+
+```{r}
+?heatmap
+```
+
+```{r}
+heatmap(matrix, margins = c(14,14), cexRow = 1, cexCol = 1)
+```
+
+use a single sequence from your alignment or generate a consensus sequence from your alignment using the Bio3D function consensus(). 
+
+The Bio3D functions blast.pdb(), plot.blast() and pdb.annotate() will help in completing this task.
+
+Note:the results of blast.pdb() contain the hits PDB identifier (or pdb.id) as well as Evalue and identity. The results of pdb.annotate() contain the other annotation terms noted above.
+
+```{r}
+cons <- consensus(alignment)
+cons$seq
+```
+
+```{r}
+?blast.pdb
+pdb <- blast.pdb(cons$seq)
+```
+
+
+
+List the top 3 unique hits (i.e. not hits representing different chains from the same structure)
+
+```{r}
+pdb
+```
+
+```{r}
+plot.blast(pdb)
+```
+
+```{r}
+?pdb.annotate
+pdb.annotate(cons$seq)
+```
+
+
+
+
+
+Note that if your consensus sequence has lots of gap positions then it will be better to use an original sequence from the alignment for your search of the PDB. In this case you could chose the sequence with the highest identity to all others in your alignment by calculating the row-wise maximum from your sequence identity matrix. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
