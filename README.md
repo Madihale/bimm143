@@ -24,3 +24,4 @@ This is a store of my class-work for [BIMM143 Winter 2019](https://bioboot.githu
 
 - Class16 [Class 16](https://github.com/Madihale/bimm143/blob/master/class16/class16.md)
 
+- Class18 [Class 18](https://github.com/Madihale/bimm143/blob/master/class18/class18.md)
