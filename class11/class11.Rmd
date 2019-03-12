@@ -97,7 +97,7 @@ write.pdb(lig.pdb, file = "ligand.pdb")
 
 ```{r}
 library(bio3d.view)
-view(pdb, "overview")
+#view(pdb, "overview")
 ```
 
 ## Bio3D view() installed...for the 3D viewer in your R markdown (the development version of bio3d.view)
@@ -111,8 +111,8 @@ To use in your R session:
 ```{r}
 library("bio3d.view")
 pdb <- read.pdb("5p21")
-view(pdb)
-view(pdb, "overview", col = "sse")
+#view(pdb)
+#view(pdb, "overview", col = "sse")
 ```
 
 

@@ -4138,7 +4138,7 @@ pdb <- read.pdb("1hsg")
     ##   Note: Accessing on-line PDB file
 
     ## Warning in get.pdb(file, path = tempdir(), verbose = FALSE): /var/folders/
-    ## fr/y7xylnkn785fn1z6g_690nhm0000gn/T//Rtmpz34n8F/1hsg.pdb exists. Skipping
+    ## fr/y7xylnkn785fn1z6g_690nhm0000gn/T//Rtmp5Yitxi/1hsg.pdb exists. Skipping
     ## download
 
 ``` r
@@ -7195,10 +7195,8 @@ write.pdb(lig.pdb, file = "ligand.pdb")
 
 ``` r
 library(bio3d.view)
-view(pdb, "overview")
+#view(pdb, "overview")
 ```
-
-    ## Computing connectivity from coordinates...
 
 Bio3D view() installed...for the 3D viewer in your R markdown (the development version of bio3d.view)
 -----------------------------------------------------------------------------------------------------
@@ -7215,13 +7213,6 @@ pdb <- read.pdb("5p21")
     ##   Note: Accessing on-line PDB file
 
 ``` r
-view(pdb)
+#view(pdb)
+#view(pdb, "overview", col = "sse")
 ```
-
-    ## Computing connectivity from coordinates...
-
-``` r
-view(pdb, "overview", col = "sse")
-```
-
-    ## Computing connectivity from coordinates...
